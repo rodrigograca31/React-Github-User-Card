@@ -1,5 +1,11 @@
 import React from "react";
 import axios from "axios";
+import Avatar from "@material-ui/core/Avatar";
+import Card from "@material-ui/core/Card";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
 
 axios.defaults.headers.common["Authorization"] =
 	"token " + process.env.REACT_APP_TOKEN;
@@ -9,7 +15,8 @@ class User extends React.Component {
 		super(props);
 		this.state = {
 			test: 0,
-			user: {}
+			user: {},
+			faces: []
 		};
 	}
 
@@ -23,8 +30,9 @@ class User extends React.Component {
 			.get("https://api.github.com/users/rodrigograca31")
 			.then(response => {
 				this.setState({
-					user: response
+					user: response.data
 				});
+				return response.data.followers_url;
 			})
 			.catch(error => {
 				console.log("error");
@@ -36,7 +44,29 @@ class User extends React.Component {
 		console.log(this.state.test);
 	}
 	render() {
-		return JSON.stringify(this.state.user);
+		return (
+			JSON.stringify(this.state.user) !== "{}" && (
+				<Card className="userCard">
+					{/* {JSON.stringify(this.state.user)} */}
+					<CardMedia
+						style={{ paddingTop: "56.25%" }}
+						image={this.state.user.avatar_url}
+					/>
+					<CardContent>
+						<Typography variant={"h6"} gutterBottom>
+							{this.state.user.name}
+						</Typography>
+						<Typography variant={"caption"}>
+							{this.state.user.bio}
+						</Typography>
+						<br />
+						<br />
+						<Divider light />
+						<br />
+					</CardContent>
+				</Card>
+			)
+		);
 		// return "Token: " + process.env.REACT_APP_TOKEN;
 	}
 }

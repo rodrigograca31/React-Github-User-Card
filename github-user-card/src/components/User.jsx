@@ -34,6 +34,25 @@ class User extends React.Component {
 				});
 				return response.data.followers_url;
 			})
+			.then(url => {
+				return axios.get(url);
+			})
+			.then(response => {
+				console.log("followers array");
+				console.log(response.data);
+				this.setState({
+					faces: response.data
+				});
+				response.data.forEach(element => {
+					// axios
+					// 	.get(element.url)
+					// 	.then(follower => {
+					// 	})
+					// 	.catch(error => {
+					// 		console.log("errors");
+					// 	});
+				});
+			})
 			.catch(error => {
 				console.log("error");
 				console.log(error);
@@ -63,6 +82,17 @@ class User extends React.Component {
 						<br />
 						<Divider light />
 						<br />
+						{this.state.faces.map(face => (
+							<Avatar
+								style={{
+									display: "inline-block",
+									border: "2px solid white",
+									marginLeft: -8
+								}}
+								key={face.id}
+								src={face.avatar_url}
+							/>
+						))}
 					</CardContent>
 				</Card>
 			)

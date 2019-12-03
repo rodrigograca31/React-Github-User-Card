@@ -53,7 +53,10 @@ class User extends React.Component {
 		this.state = {
 			test: 0,
 			user: {},
-			faces: []
+			faces: [],
+			formValues: {
+				username: ""
+			}
 		};
 	}
 
@@ -62,9 +65,12 @@ class User extends React.Component {
 		this.setState({
 			test: 2
 		});
+		this.getUserInfo("rodrigograca31");
+	}
 
+	getUserInfo = username => {
 		axios
-			.get("https://api.github.com/users/rodrigograca31")
+			.get(`https://api.github.com/users/${username}`)
 			.then(response => {
 				this.setState({
 					user: response.data
@@ -94,49 +100,86 @@ class User extends React.Component {
 				console.log("error");
 				console.log(error);
 			});
-	}
-	componentDidUpdate() {
+	};
+	componentDidUpdate(prevProps, prevState) {
 		console.log("2");
 		console.log(this.state.test);
+		console.log(this.state.formValues.username);
+
+		// if there was changes in the input get user info again
+		//this would be equivalent to useeffect [this.state.formValues.username]
+		if (prevState.formValues.username !== this.state.formValues.username) {
+			this.getUserInfo(this.state.formValues.username);
+		}
 	}
+
+	onFormSubmit = event => {
+		event.preventDefault();
+		console.log("aa");
+		this.getUserInfo(this.state.formValues.username);
+	};
+
+	onValueChange = event => {
+		const { name, value } = event.target;
+
+		this.setState({
+			formValues: {
+				...this.state.formValues,
+				[name]: value
+			}
+		});
+	};
+
 	render() {
 		const { classes } = this.props;
 
 		return (
-			JSON.stringify(this.state.user) !== "{}" && (
-				<Card className="userCard">
-					{/* {JSON.stringify(this.state.user)} */}
-					<CardMedia
-						// style={{ paddingTop: "56.25%" }}
-						className={classes.media}
-						image={this.state.user.avatar_url}
-					/>
-					<CardContent>
-						<Typography variant={"h6"} gutterBottom>
-							{this.state.user.name}
-						</Typography>
-						<Typography variant={"caption"}>
-							{this.state.user.bio}
-						</Typography>
-						<br />
-						<br />
-						<Divider light />
-						<br />
-						{this.state.faces.map(face => (
-							<Avatar
-								// style={{
-								// 	display: "inline-block",
-								// 	border: "2px solid white",
-								// 	marginLeft: -8
-								// }}
-								className={classes.avatar}
-								key={face.id}
-								src={face.avatar_url}
-							/>
-						))}
-					</CardContent>
-				</Card>
-			)
+			<>
+				{JSON.stringify(this.state.user) !== "{}" && (
+					<Card className="userCard">
+						{/* {JSON.stringify(this.state.user)} */}
+						<CardMedia
+							// style={{ paddingTop: "56.25%" }}
+							className={classes.media}
+							image={this.state.user.avatar_url}
+						/>
+						<CardContent>
+							<Typography variant={"h6"} gutterBottom>
+								{this.state.user.name}
+							</Typography>
+							<Typography variant={"caption"}>
+								{this.state.user.bio}
+							</Typography>
+							<br />
+							<br />
+							<Divider light />
+							<br />
+							{this.state.faces.map(face => (
+								<Avatar
+									// style={{
+									// 	display: "inline-block",
+									// 	border: "2px solid white",
+									// 	marginLeft: -8
+									// }}
+									className={classes.avatar}
+									key={face.id}
+									src={face.avatar_url}
+								/>
+							))}
+						</CardContent>
+					</Card>
+				)}
+				<form action="#" onSubmit={this.onFormSubmit}>
+					<h2>Search: </h2>
+					<input
+						type="text"
+						value={this.state.formValues.username}
+						onChange={this.onValueChange}
+						name="username"
+					></input>
+					{/* <input type="submit" value="Search" /> */}
+				</form>
+			</>
 		);
 		// return "Token: " + process.env.REACT_APP_TOKEN;
 	}

@@ -1,3 +1,5 @@
+Final product for future reference: ![image](https://user-images.githubusercontent.com/1134310/70075700-36df5c00-15f5-11ea-8e35-8fc7bdcda84f.png)
+
 # Module Project: Component Lifecycle Methods - React Github User Card
 
 This project allows you to practice the concepts and techniques learned in this module and apply them in a concrete project. This module explored lifecycle methods in class components. In your project you will demonstrate proficiency of these concepts by recreating the Github User Card project, but as a React application this time.

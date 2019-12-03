@@ -7,8 +7,45 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
+import { withStyles } from "@material-ui/core/styles";
+
 axios.defaults.headers.common["Authorization"] =
 	"token " + process.env.REACT_APP_TOKEN;
+
+const useStyles = theme => ({
+	card: {
+		maxWidth: 300,
+		margin: "auto",
+		transition: "0.3s",
+		boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+		"&:hover": {
+			boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+		}
+	},
+	media: {
+		paddingTop: "56.25%"
+	},
+	content: {
+		textAlign: "left",
+		padding: theme.spacing.unit * 3
+	},
+	divider: {
+		margin: `${theme.spacing.unit * 3}px 0`
+	},
+	heading: {
+		fontWeight: "bold"
+	},
+	subheading: {
+		lineHeight: 1.8
+	},
+	avatar: {
+		display: "inline-block",
+		border: "2px solid white",
+		"&:not(:first-of-type)": {
+			marginLeft: -theme.spacing.unit
+		}
+	}
+});
 
 class User extends React.Component {
 	constructor(props) {
@@ -63,12 +100,15 @@ class User extends React.Component {
 		console.log(this.state.test);
 	}
 	render() {
+		const { classes } = this.props;
+
 		return (
 			JSON.stringify(this.state.user) !== "{}" && (
 				<Card className="userCard">
 					{/* {JSON.stringify(this.state.user)} */}
 					<CardMedia
-						style={{ paddingTop: "56.25%" }}
+						// style={{ paddingTop: "56.25%" }}
+						className={classes.media}
 						image={this.state.user.avatar_url}
 					/>
 					<CardContent>
@@ -84,11 +124,12 @@ class User extends React.Component {
 						<br />
 						{this.state.faces.map(face => (
 							<Avatar
-								style={{
-									display: "inline-block",
-									border: "2px solid white",
-									marginLeft: -8
-								}}
+								// style={{
+								// 	display: "inline-block",
+								// 	border: "2px solid white",
+								// 	marginLeft: -8
+								// }}
+								className={classes.avatar}
 								key={face.id}
 								src={face.avatar_url}
 							/>
@@ -101,4 +142,6 @@ class User extends React.Component {
 	}
 }
 
-export default User;
+// export default User;
+
+export default withStyles(useStyles)(User);
